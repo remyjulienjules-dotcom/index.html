@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101719">
+<title>Mon Budget</title>
+<style>
+:root{--bg:#101719;--panel:#182326;--panel2:#202d30;--line:#2d3b3e;--text:#f1f5f4;--muted:#9aabaa;--green:#7bd6a4;--red:#ff8585;--gold:#e9c77c;--blue:#83b9e8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.app{max-width:760px;margin:auto;padding:20px 16px 100px}.top{display:flex;justify-content:space-between;align-items:center;margin:8px 0 22px}.brand{font-weight:800;letter-spacing:1.5px;font-size:18px}.month{background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:9px 12px;border-radius:12px;font-size:13px}
+h1{font-size:26px;margin:0 0 5px}.sub{color:var(--muted);font-size:13px}.hero{margin-top:18px;background:linear-gradient(135deg,#1e3834,#1b292c 70%);border:1px solid #355149;border-radius:22px;padding:20px}.eyebrow{color:#b5d8c6;font-size:13px}.balance{font-size:38px;font-weight:800;letter-spacing:-1px;margin:8px 0 18px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#ffffff0c;border:1px solid #ffffff12;border-radius:14px;padding:12px}.stat small{color:#b5c4c1;display:block;margin-bottom:6px}.stat strong{font-size:18px}.positive{color:var(--green)}.negative{color:var(--red)}
+.section{margin-top:25px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.section h2{font-size:17px;margin:0}.link{color:var(--green);background:none;border:0;font-weight:650;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.tile,.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px}.tile .ico{font-size:19px}.tile small{display:block;color:var(--muted);margin:9px 0 5px}.tile strong{font-size:19px}
+.progress-wrap{background:#2a393b;height:9px;border-radius:99px;overflow:hidden;margin:12px 0 7px}.progress{height:100%;background:var(--green);width:0%;border-radius:99px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.muted{color:var(--muted);font-size:12px}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#131d1fef;backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;justify-content:center;padding:10px 8px calc(10px + env(safe-area-inset-bottom));z-index:5}.tabs button{flex:1;max-width:150px;border:0;background:none;color:var(--muted);font-size:11px;padding:7px 2px}.tabs button span{display:block;font-size:19px;margin-bottom:4px}.tabs button.active{color:var(--green)}
+button,input,select{font:inherit}button{cursor:pointer}.primary{background:var(--green);color:#102019;border:0;border-radius:13px;padding:12px 16px;font-weight:750}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px 13px}.list{display:flex;flex-direction:column;gap:9px}.item{display:flex;align-items:center;gap:11px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}.circle{width:38px;height:38px;border-radius:12px;background:var(--panel2);display:grid;place-items:center;font-size:18px}.item-main{flex:1;min-width:0}.item-main strong{display:block;font-size:14px}.item-main small{color:var(--muted);font-size:12px}.amount{font-weight:750;font-size:14px;white-space:nowrap}
+.page{display:none}.page.active{display:block}.empty{padding:22px;text-align:center;color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:15px;font-size:13px}
+form{display:grid;gap:12px}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.field input,.field select{width:100%;padding:12px;border-radius:11px;background:#111b1d;border:1px solid var(--line);color:var(--text)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+canvas{width:100%;height:190px;display:block}.barlist{display:grid;gap:12px}.barrow{display:grid;grid-template-columns:90px 1fr 65px;gap:8px;align-items:center;font-size:12px}.barbg{height:8px;background:#2a393b;border-radius:99px;overflow:hidden}.barfill{height:100%;background:var(--blue);border-radius:99px}
+.notice{color:var(--muted);font-size:12px;line-height:1.5}.danger{color:var(--red)}.hidden{display:none!important}
+@media(min-width:600px){.app{padding:28px 24px 110px}.grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+ <div class="top"><div class="brand">◈ MON BUDGET</div><input class="month" id="monthPick" type="month" aria-label="Mois"></div>
+ <section id="dashboard" class="page active">
+  <h1>Bonjour 👋</h1><div class="sub">Voici où tu en es ce mois-ci.</div>
+  <div class="hero"><div class="eyebrow">ARGENT DISPONIBLE</div><div class="balance" id="available">0,00 €</div>
+   <div class="stats"><div class="stat"><small>Revenus</small><strong class="positive" id="incomeTotal">0 €</strong></div><div class="stat"><small>Dépenses</small><strong id="expenseTotal">0 €</strong></div></div>
+  </div>
+  <div class="section"><div class="section-head"><h2>Vue d'ensemble</h2></div><div class="grid">
+   <div class="tile"><div class="ico">🏠</div><small>Charges fixes</small><strong id="fixedTotal">0 €</strong></div>
+   <div class="tile"><div class="ico">🛍️</div><small>Dépenses variables</small><strong id="variableTotal">0 €</strong></div>
+   <div class="tile"><div class="ico">🐷</div><small>Épargne prévue</small><strong id="savingTotal">0 €</strong></div>
+   <div class="tile"><div class="ico">📊</div><small>Taux d'épargne</small><strong id="savingRate">0 %</strong></div>
+  </div></div>
+  <div class="section card"><div class="section-head"><h2>Budget du mois</h2><span class="muted" id="budgetLabel">Non défini</span></div><div class="progress-wrap"><div class="progress" id="budgetProgress"></div></div><div class="row muted"><span id="spentLabel">0 € dépensés</span><span id="remainingLabel">0 € restants</span></div></div>
+  <div class="section"><div class="section-head"><h2>Dernières opérations</h2><button class="link" onclick="showPage('transactions')">Tout voir →</button></div><div id="recentList" class="list"></div></div>
+ </section>
+ <section id="transactions" class="page">
+  <h1>Dépenses & revenus</h1><div class="sub">Ajoute et retrouve toutes tes opérations.</div>
+  <div class="section card"><form id="transactionForm">
+   <div class="form-grid"><div class="field"><label>Type</label><select id="txType"><option value="expense">Dépense</option><option value="income">Revenu</option></select></div><div class="field"><label>Montant (€)</label><input id="txAmount" type="number" min="0.01" step="0.01" placeholder="25,00" required></div></div>
+   <div class="form-grid"><div class="field"><label>Libellé</label><input id="txName" placeholder="Courses, salaire…" required></div><div class="field"><label>Catégorie</label><select id="txCategory"><option>Courses</option><option>Logement</option><option>Transport</option><option>Factures</option><option>Loisirs</option><option>Santé</option><option>Shopping</option><option>Salaire</option><option>Autre</option></select></div></div>
+   <div class="field"><label>Date</label><input id="txDate" type="date" required></div><button class="primary" type="submit">＋ Ajouter l'opération</button>
+  </form></div>
+  <div class="section-head"><h2>Historique</h2><span class="muted" id="txCount"></span></div><div id="transactionList" class="list"></div>
+ </section>
+ <section id="fixed" class="page">
+  <h1>Charges fixes</h1><div class="sub">Tes paiements réguliers à ne pas oublier.</div>
+  <div class="section card"><form id="fixedForm">
+   <div class="field"><label>Nom de la charge</label><input id="fixedName" placeholder="Loyer, téléphone…" required></div>
+   <div class="form-grid"><div class="field"><label>Montant (€)</label><input id="fixedAmount" type="number" min="0.01" step="0.01" required></div><div class="field"><label>Jour de paiement</label><input id="fixedDay" type="number" min="1" max="31" value="5" required></div></div>
+   <div class="field"><label>Catégorie</label><select id="fixedCategory"><option>Logement</option><option>Énergie</option><option>Téléphone / Internet</option><option>Assurance</option><option>Abonnement</option><option>Transport</option><option>Autre</option></select></div>
+   <button class="primary" type="submit">＋ Ajouter une charge</button>
+  </form></div>
+  <div class="section"><div class="row"><h2>Total mensuel</h2><strong id="fixedPageTotal">0 €</strong></div><div id="fixedList" class="list" style="margin-top:12px"></div></div>
+ </section>
+ <section id="analytics" class="page">
+  <h1>Analyses</h1><div class="sub">Comprends mieux la répartition de ton budget.</div>
+  <div class="section card"><h2>Dépenses par catégorie</h2><div id="categoryBars" class="barlist" style="margin-top:18px"></div></div>
+  <div class="section card"><h2>Évolution sur 6 mois</h2><canvas id="chart" width="600" height="210"></canvas><div class="notice">Les mois sans opérations apparaissent à zéro.</div></div>
+ </section>
+ <section id="savings" class="page">
+  <h1>Mon épargne</h1><div class="sub">Définis un objectif et suis ta progression.</div>
+  <div class="section card"><div class="field"><label>Objectif d'épargne (€)</label><input id="goal" type="number" min="0" step="1" placeholder="Ex. 1000"></div><div class="field" style="margin-top:10px"><label>Montant déjà épargné (€)</label><input id="saved" type="number" min="0" step="0.01" placeholder="0"></div><button class="primary" style="margin-top:12px" onclick="saveSavings()">Enregistrer mon objectif</button><div class="progress-wrap" style="margin-top:18px"><div class="progress" id="savingProgress"></div></div><div class="row muted"><span id="savingProgressLabel">0 % atteint</span><span id="savingGap">0 € restant</span></div></div>
+ </section>
+ <section id="settings" class="page">
+  <h1>Réglages</h1><div class="sub">Personnalise ton budget et protège tes données.</div>
+  <div class="section card"><div class="field"><label>Budget mensuel de dépenses (€)</label><input id="budgetInput" type="number" min="0" step="1" placeholder="Ex. 1200"></div><button class="primary" style="margin-top:12px" onclick="saveBudget()">Enregistrer le budget</button></div>
+  <div class="section card"><h2>Mes données</h2><p class="notice">Tes opérations et réglages sont enregistrés dans le stockage local de ce navigateur sur cet appareil. Il n'y a pas de compte ni de synchronisation cloud. Effacer les données du navigateur peut supprimer tes informations.</p><div class="actions"><button class="secondary" onclick="exportData()">Exporter une sauvegarde</button><button class="secondary" onclick="document.getElementById('importFile').click()">Importer une sauvegarde</button><input id="importFile" class="hidden" type="file" accept="application/json"></div><p class="notice" style="margin-top:12px">La connexion bancaire automatique n'est pas activée dans cette version. Ne saisis jamais tes identifiants bancaires ici.</p><button class="secondary danger" style="margin-top:8px" onclick="resetData()">Effacer toutes mes données</button></div>
+ </section>
+</div>
+<nav class="tabs">
+ <button class="active" data-page="dashboard" onclick="showPage('dashboard')"><span>⌂</span>Accueil</button>
+ <button data-page="transactions" onclick="showPage('transactions')"><span>↕</span>Opérations</button>
+ <button data-page="fixed" onclick="showPage('fixed')"><span>▣</span>Charges</button>
+ <button data-page="analytics" onclick="showPage('analytics')"><span>▥</span>Analyses</button>
+ <button data-page="savings" onclick="showPage('savings')"><span>◉</span>Épargne</button>
+</nav>
+<script>
+const KEY='monBudgetV1';
+let data=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{transactions:[],fixed:[],budget:0,goal:0,saved:0}}catch(e){return {transactions:[],fixed:[],budget:0,goal:0,saved:0}}}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+const euro=n=>(Number(n)||0).toLocaleString('fr-FR',{style:'currency',currency:'EUR'});
+const today=()=>new Date().toISOString().slice(0,10);
+const monthNow=()=>document.getElementById('monthPick').value||today().slice(0,7);
+document.getElementById('monthPick').value=today().slice(0,7);document.getElementById('txDate').value=today();
+document.getElementById('monthPick').addEventListener('change',render);
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='settings')document.getElementById('budgetInput').value=data.budget||'';render();window.scrollTo(0,0)}
+function monthTx(){return data.transactions.filter(t=>t.date.startsWith(monthNow()))}
+function totals(){let ts=monthTx(),inc=ts.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0),exp=ts.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0),fixed=data.fixed.reduce((s,f)=>s+f.amount,0),saved=Number(data.saved)||0;return {inc,exp,fixed,variable:Math.max(0,exp-fixed),available:inc-exp, saved}}
+function render(){let t=totals();document.getElementById('available').textContent=euro(t.available);document.getElementById('available').style.color=t.available<0?'var(--red)':'white';document.getElementById('incomeTotal').textContent=euro(t.inc);document.getElementById('expenseTotal').textContent=euro(t.exp);document.getElementById('fixedTotal').textContent=euro(t.fixed);document.getElementById('variableTotal').textContent=euro(t.variable);document.getElementById('savingTotal').textContent=euro(data.saved);document.getElementById('savingRate').textContent=(t.inc?Math.round(data.saved/t.inc*100):0)+' %';let pct=data.budget?Math.min(100,t.exp/data.budget*100):0;document.getElementById('budgetProgress').style.width=pct+'%';document.getElementById('budgetLabel').textContent=data.budget?euro(data.budget):'Non défini';document.getElementById('spentLabel').textContent=euro(t.exp)+' dépensés';document.getElementById('remainingLabel').textContent=euro(data.budget-t.exp)+' restants';document.getElementById('fixedPageTotal').textContent=euro(t.fixed);
+ renderTx();renderFixed();renderBars();renderChart();renderSavings()}
+function itemHTML(t,del){let sign=t.type==='income'?'+':'−';return `<div class="item"><div class="circle">${t.type==='income'?'↗':'↘'}</div><div class="item-main"><strong>${esc(t.name)}</strong><small>${esc(t.category)} · ${t.date.split('-').reverse().join('/')}</small></div><div class="amount ${t.type==='income'?'positive':'negative'}">${sign}${euro(t.amount)}</div><button class="link" aria-label="Supprimer" onclick="${del}">✕</button></div>`}
+function renderTx(){let ts=monthTx().sort((a,b)=>b.date.localeCompare(a.date));document.getElementById('txCount').textContent=ts.length+' opération(s)';document.getElementById('transactionList').innerHTML=ts.length?ts.map(t=>itemHTML(t,`deleteTx('${t.id}')`)).join(''):'<div class="empty">Aucune opération pour ce mois. Ajoute ta première dépense ou ton premier revenu.</div>';let recent=[...ts].slice(0,4);document.getElementById('recentList').innerHTML=recent.length?recent.map(t=>itemHTML(t,`deleteTx('${t.id}')`)).join(''):'<div class="empty">Tes dernières opérations apparaîtront ici.</div>'}
+function renderFixed(){document.getElementById('fixedList').innerHTML=data.fixed.length?data.fixed.map(f=>`<div class="item"><div class="circle">🏠</div><div class="item-main"><strong>${esc(f.name)}</strong><small>${esc(f.category)} · le ${f.day} de chaque mois</small></div><div class="amount">${euro(f.amount)}</div><button class="link" onclick="deleteFixed('${f.id}')">✕</button></div>`).join(''):'<div class="empty">Aucune charge fixe enregistrée.</div>'}
+function renderBars(){let sums={};monthTx().filter(t=>t.type==='expense').forEach(t=>sums[t.category]=(sums[t.category]||0)+t.amount);let arr=Object.entries(sums).sort((a,b)=>b[1]-a[1]),max=Math.max(1,...arr.map(x=>x[1]));document.getElementById('categoryBars').innerHTML=arr.length?arr.map(([k,v])=>`<div class="barrow"><span>${esc(k)}</span><div class="barbg"><div class="barfill" style="width:${v/max*100}%"></div></div><strong style="text-align:right">${euro(v)}</strong></div>`).join(''):'<div class="empty">Ajoute des dépenses pour voir leur répartition.</div>'}
+function renderChart(){let c=document.getElementById('chart'),ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);let now=new Date(monthNow()+'-01T12:00:00'),labels=[],vals=[];for(let i=5;i>=0;i--){let d=new Date(now.getFullYear(),now.getMonth()-i,1),m=d.toISOString().slice(0,7);labels.push(d.toLocaleDateString('fr-FR',{month:'short'}));vals.push(data.transactions.filter(t=>t.date.startsWith(m)&&t.type==='expense').reduce((s,t)=>s+t.amount,0))}let max=Math.max(100,...vals)*1.15;ctx.strokeStyle='#334347';ctx.fillStyle='#9aabaa';ctx.font='14px sans-serif';for(let j=0;j<4;j++){let y=15+j*(h-48)/3;ctx.beginPath();ctx.moveTo(35,y);ctx.lineTo(w-10,y);ctx.stroke()}let slot=(w-55)/6;vals.forEach((v,i)=>{let bh=(h-55)*v/max,x=42+i*slot;ctx.fillStyle='#7bd6a4';ctx.beginPath();ctx.roundRect(x,h-35-bh,Math.min(42,slot-12),bh,6);ctx.fill();ctx.fillStyle='#9aabaa';ctx.fillText(labels[i],x,h-10);})}
+function renderSavings(){let p=data.goal?Math.min(100,data.saved/data.goal*100):0;document.getElementById('goal').value=data.goal||'';document.getElementById('saved').value=data.saved||'';document.getElementById('savingProgress').style.width=p+'%';document.getElementById('savingProgressLabel').textContent=Math.round(p)+' % atteint';document.getElementById('savingGap').textContent=euro(Math.max(0,data.goal-data.saved))+' restant'}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+document.getElementById('transactionForm').addEventListener('submit',e=>{e.preventDefault();data.transactions.push({id:crypto.randomUUID(),type:document.getElementById('txType').value,amount:Number(document.getElementById('txAmount').value),name:document.getElementById('txName').value.trim(),category:document.getElementById('txCategory').value,date:document.getElementById('txDate').value});e.target.reset();document.getElementById('txDate').value=today();persist()});
+document.getElementById('fixedForm').addEventListener('submit',e=>{e.preventDefault();data.fixed.push({id:crypto.randomUUID(),name:document.getElementById('fixedName').value.trim(),amount:Number(document.getElementById('fixedAmount').value),day:Number(document.getElementById('fixedDay').value),category:document.getElementById('fixedCategory').value});e.target.reset();persist()});
+function deleteTx(id){if(confirm('Supprimer cette opération ?')){data.transactions=data.transactions.filter(t=>t.id!==id);persist()}}
+function deleteFixed(id){if(confirm('Supprimer cette charge fixe ?')){data.fixed=data.fixed.filter(f=>f.id!==id);persist()}}
+function saveBudget(){data.budget=Number(document.getElementById('budgetInput').value)||0;persist();alert('Budget enregistré.')}
+function saveSavings(){data.goal=Number(document.getElementById('goal').value)||0;data.saved=Number(document.getElementById('saved').value)||0;persist();alert('Objectif d’épargne enregistré.')}
+function exportData(){let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mon-budget-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+document.getElementById('importFile').addEventListener('change',async e=>{let f=e.target.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.transactions)||!Array.isArray(d.fixed))throw Error();data=d;persist();alert('Sauvegarde importée.')}catch(err){alert('Fichier de sauvegarde invalide.')}e.target.value=''});
+function resetData(){if(confirm('Effacer définitivement toutes les données enregistrées sur cet appareil ?')){data={transactions:[],fixed:[],budget:0,goal:0,saved:0};persist()}}
+render();
+</script>
+</body>
+</html>
